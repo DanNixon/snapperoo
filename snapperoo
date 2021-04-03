@@ -1,0 +1,50 @@
+#!/bin/bash
+# Copyright (c) 2021 Dan Nixon
+# SPDX-License-Identifier: MIT
+
+config_file="${SNAPPEROO_CONFIG:-/etc/snapperoo.json}"
+
+current_schedule="${1:-manual}"
+echo "Schedule: $current_schedule"
+
+_get_config() {
+  echo "$1" | jq -r ".$2"
+}
+
+(( matched_jobs = 0 ))
+(( successful_jobs = 0 ))
+
+while IFS= read -r config;
+do
+  echo
+  echo "$config"
+  (( matched_jobs += 1 ))
+
+  source="$(_get_config "$config" 'source')"
+  target="$(_get_config "$config" 'target')"
+  retention_count="$(_get_config "$config" 'retention_count')"
+
+  # Ensure the target directory exists
+  mkdir -p "$target" || continue
+
+  # Take the snapshot
+  btrfs subvolume snapshot -r \
+    "$source" \
+    "$target/$(date --iso-8601=seconds)_$current_schedule" || continue
+
+  # Find and remove old snapshots
+  while read -r s;
+  do
+    btrfs subvolume delete "$s"
+  done< <(find "$target" -maxdepth 1 -name "*_$current_schedule" | sort | head -n -"$retention_count");
+
+  (( successful_jobs += 1 ))
+done< <(jq -rc < "$config_file" ".[] | select(.schedules | has(\"$current_schedule\")) | . += .schedules.$current_schedule | del(.schedules)")
+
+echo ""
+echo "Matched: $matched_jobs"
+echo "Successful: $successful_jobs"
+(( failed_jobs = matched_jobs - successful_jobs ))
+echo "Failed: $failed_jobs"
+
+exit "$failed_jobs"

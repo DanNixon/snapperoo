@@ -1,0 +1,17 @@
+[
+  {
+    "source": "/",
+    "target": "/.snapshots/root",
+    "schedules": {
+      "daily": {
+        "retention_count": 7
+      },
+      "weekly": {
+        "retention_count": 4
+      },
+      "monthly": {
+        "retention_count": 12
+      }
+    }
+  }
+]

@@ -1,0 +1,8 @@
+# Copyright (c) 2021 Dan Nixon
+# SPDX-License-Identifier: MIT
+
+[Unit]
+Description=Run Snapperoo on a %i basis
+
+[Service]
+ExecStart=/usr/bin/snapperoo %i
