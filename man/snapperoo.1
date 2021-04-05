@@ -1,0 +1,71 @@
+.TH SNAPPEROO 1
+
+.SH NAME
+snapperoo \- A small, bare essentials utility for taking Btrfs snapshots.
+
+.SH SYNOPSIS
+.B snapperoo
+[\fIschedule\fR]
+
+.SH DESCRIPTION
+.B snapperoo
+is designed to be the bare minimum required to automatically take Btrfs
+snapshots and delete old snapshots according to a retention policy.
+.PP
+The volumes to be snapshotted, destination and retention settings are
+configured via a JSON file, for details of this see
+.BR snapperoo (5).
+
+.SH INVOCATION
+
+.B snapperoo
+is designed to be invoked according to the desired schedules, with the current
+schedule being passed as a single parameter.
+
+The scheduling of the snapshots is the responsibility of the job scheduler,
+.B snapperoo
+simply takes snapshots when requested and removes any that are deemed to be
+old.
+This also allows
+.B snapperoo
+to be triggered by other events, e.g.
+package or configuration updates, using an appropriately named "schedule".
+
+.SH SYSTEMD
+
+Templated Systemd units are included for scheduling time based snapshots using
+Systemd.
+Schedules are limited to time specifications that are supported
+by \fIOnCalendar=\fR, see
+.BR systemd.timer (5)
+and
+.BR systemd.time (7).
+
+These timers may be enabled using the command:
+.PP
+.nf
+.RS
+systemctl enable snapperoo@weekly.timer
+systemctl enable snapperoo@monthly.timer
+.RE
+.fi
+.PP
+This would allow weekly and monthly snapshots to be taken.
+
+.SH EXAMPLES
+Trigger "weekly" snapshotting and rotation:
+.PP
+.nf
+.RS
+snapperoo weekly
+.RE
+.fi
+.PP
+In order to ensure snapshotting functions as expected, this command should be
+called once per week by the job scheduling system of choice.
+
+.SH SEE ALSO
+.BR snapperoo (5),
+.BR btrfs-subvolume (8),
+.BR systemd.timer (5),
+.BR systemd.time (7)

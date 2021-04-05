@@ -1,0 +1,57 @@
+.TH SNAPPEROO 5
+
+.SH NAME
+snapperoo \- A small, bare essentials utility for taking Btrfs snapshots.
+
+.SH SYNOPSIS
+snapperoo.json
+
+.SH DESCRIPTION
+
+.B snapperoo
+is configured using a fairly simple JSON file.
+By default, this is read from \fI/etc/snapperoo.json\fR, but can be specified
+manually by setting the \fISNAPPEROO_CONFIG\fR environment variable.
+
+.SH EXAMPLES
+The following is an example of a configuration that will keep:
+  - 7 daily and 52 weekly snapshots of \fI/\fR, stored in \fI/.snapshots/root\fR
+  - 24 hourly and 7 daily snapshots of \fI/home\fR, stored in \fI/.snaphsots/home\fR
+
+.PP
+.nf
+.RS
+[
+  {
+    "source": "/",
+    "target": "/.snapshots/root",
+    "schedules": {
+      "daily": {
+        "retention_count": 7
+      },
+      "weekly": {
+        "retention_count": 52
+      }
+    }
+  },
+  {
+    "source": "/home",
+    "target": "/.snapshots/home",
+    "schedules": {
+      "hourly": {
+        "retention_count": 24
+      },
+      "daily": {
+        "retention_count": 7
+      }
+    }
+  }
+]
+.RE
+.fi
+.PP
+In order to ensure snapshotting functions as expected, this command should be
+called once per week by the job scheduling system of choice.
+
+.SH SEE ALSO
+.BR snapperoo (1)

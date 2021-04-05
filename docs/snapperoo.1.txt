@@ -1,0 +1,61 @@
+SNAPPEROO(1)                General Commands Manual               SNAPPEROO(1)
+
+
+
+NAME
+       snapperoo  -  A  small,  bare essentials utility for taking Btrfs snap‐
+       shots.
+
+
+SYNOPSIS
+       snapperoo [schedule]
+
+
+DESCRIPTION
+       snapperoo is designed to be the bare minimum required to  automatically
+       take  Btrfs snapshots and delete old snapshots according to a retention
+       policy.
+
+       The volumes to be snapshotted, destination and retention  settings  are
+       configured via a JSON file, for details of this see snapperoo(5).
+
+
+INVOCATION
+       snapperoo is designed to be invoked according to the desired schedules,
+       with the current schedule being passed as a single parameter.
+
+       The scheduling of the snapshots is the responsibility of the job sched‐
+       uler,  snapperoo  simply takes snapshots when requested and removes any
+       that are deemed to be old.  This also allows snapperoo to be  triggered
+       by  other  events, e.g.  package or configuration updates, using an ap‐
+       propriately named "schedule".
+
+
+SYSTEMD
+       Templated Systemd units are included for scheduling  time  based  snap‐
+       shots using Systemd.  Schedules are limited to time specifications that
+       are supported by OnCalendar=, see systemd.timer(5) and systemd.time(7).
+
+       These timers may be enabled using the command:
+
+              systemctl enable snapperoo@weekly.timer
+              systemctl enable snapperoo@monthly.timer
+
+       This would allow weekly and monthly snapshots to be taken.
+
+
+EXAMPLES
+       Trigger "weekly" snapshotting and rotation:
+
+              snapperoo weekly
+
+       In order to ensure snapshotting functions  as  expected,  this  command
+       should be called once per week by the job scheduling system of choice.
+
+
+SEE ALSO
+       snapperoo(5), btrfs-subvolume(8), systemd.timer(5), systemd.time(7)
+
+
+
+                                                                  SNAPPEROO(1)
