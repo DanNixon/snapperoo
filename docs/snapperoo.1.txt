@@ -22,13 +22,17 @@ DESCRIPTION
 
 INVOCATION
        snapperoo is designed to be invoked according to the desired schedules,
-       with the current schedule being passed as a single parameter.
+       with the current schedule being passed as a single argument.
 
        The scheduling of the snapshots is the responsibility of the job sched‐
        uler,  snapperoo  simply takes snapshots when requested and removes any
        that are deemed to be old.  This also allows snapperoo to be  triggered
        by  other  events, e.g.  package or configuration updates, using an ap‐
        propriately named "schedule".
+
+       If snapperoo is invoked with no arguments then the schedule name  takes
+       the  default  value of "manual".  This allows easy manual snapshotting,
+       if desired.
 
 
 SYSTEMD

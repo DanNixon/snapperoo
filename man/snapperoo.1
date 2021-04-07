@@ -20,7 +20,7 @@ configured via a JSON file, for details of this see
 
 .B snapperoo
 is designed to be invoked according to the desired schedules, with the current
-schedule being passed as a single parameter.
+schedule being passed as a single argument.
 
 The scheduling of the snapshots is the responsibility of the job scheduler,
 .B snapperoo
@@ -30,6 +30,12 @@ This also allows
 .B snapperoo
 to be triggered by other events, e.g.
 package or configuration updates, using an appropriately named "schedule".
+
+If
+.B snapperoo
+is invoked with no arguments then the schedule name takes the default value of
+"manual".
+This allows easy manual snapshotting, if desired.
 
 .SH SYSTEMD
 

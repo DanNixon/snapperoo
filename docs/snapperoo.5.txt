@@ -18,22 +18,50 @@ DESCRIPTION
 
 
 EXAMPLES
-       The following is an example of a configuration that will keep:
-         - 7 daily and 52 weekly snapshots of /, stored in /.snapshots/root
+       The following is an example of a configuration that will keep the  fol‐
+       lowing periodic snapshots:
+         -   7  daily  and  52  weekly  snapshots  of  /,  stored  in  /.snap‐
+       shots/root/automatic
          - 24 hourly and 7  daily  snapshots  of  /home,  stored  in  /.snaph‐
        sots/home
+
+       It  also  has provisions for event based snapshots of the root filesys‐
+       tem, to be stored in /.snapshots/root/event.  In this case the schedule
+       is  used to define the event that triggers the snapshot, in the example
+       the following snapshots are kept:
+         - 10 taken before the start of package updates
+         - Infinitely many taken before a configuration change is made
+         - Infinitely many taken manually
+
+       Use of all should be considered carefully as this could  use  excessive
+       disk space.
 
 
               [
                 {
                   "source": "/",
-                  "target": "/.snapshots/root",
+                  "target": "/.snapshots/root/automatic",
                   "schedules": {
                     "daily": {
                       "retention_count": 7
                     },
                     "weekly": {
                       "retention_count": 52
+                    }
+                  }
+                },
+                {
+                  "source": "/",
+                  "target": "/.snapshots/root/event",
+                  "schedules": {
+                    "pre_package_update": {
+                      "retention_count": 10
+                    },
+                    "pre_configuration_change": {
+                      "retention_count": "all"
+                    },
+                    "manual": {
+                      "retention_count": "all"
                     }
                   }
                 },

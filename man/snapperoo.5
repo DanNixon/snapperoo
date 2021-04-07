@@ -14,9 +14,20 @@ By default, this is read from \fI/etc/snapperoo.json\fR, but can be specified
 manually by setting the \fISNAPPEROO_CONFIG\fR environment variable.
 
 .SH EXAMPLES
-The following is an example of a configuration that will keep:
-  - 7 daily and 52 weekly snapshots of \fI/\fR, stored in \fI/.snapshots/root\fR
+The following is an example of a configuration that will keep the following
+periodic snapshots:
+  - 7 daily and 52 weekly snapshots of \fI/\fR, stored in \fI/.snapshots/root/automatic\fR
   - 24 hourly and 7 daily snapshots of \fI/home\fR, stored in \fI/.snaphsots/home\fR
+
+It also has provisions for event based snapshots of the root filesystem, to be
+stored in \fI/.snapshots/root/event\fR.
+In this case the schedule is used to define the event that triggers the
+snapshot, in the example the following snapshots are kept:
+  - 10 taken before the start of package updates
+  - Infinitely many taken before a configuration change is made
+  - Infinitely many taken manually
+
+Use of \fIall\fR should be considered carefully as this could use excessive disk space.
 
 .PP
 .nf
@@ -24,13 +35,28 @@ The following is an example of a configuration that will keep:
 [
   {
     "source": "/",
-    "target": "/.snapshots/root",
+    "target": "/.snapshots/root/automatic",
     "schedules": {
       "daily": {
         "retention_count": 7
       },
       "weekly": {
         "retention_count": 52
+      }
+    }
+  },
+  {
+    "source": "/",
+    "target": "/.snapshots/root/event",
+    "schedules": {
+      "pre_package_update": {
+        "retention_count": 10
+      },
+      "pre_configuration_change": {
+        "retention_count": "all"
+      },
+      "manual": {
+        "retention_count": "all"
       }
     }
   },
