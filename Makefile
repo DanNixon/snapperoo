@@ -7,6 +7,11 @@ mandir := $(prefix)/share/man
 licensedir := $(prefix)/share/licenses
 
 
+.PHONY: check
+check:
+	shellcheck snapperoo
+
+
 .PHONY: install
 install: docs-man
 	install -D -m 755 snapperoo "$(bindir)/snapperoo"
