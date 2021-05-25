@@ -9,6 +9,7 @@ Snapperoo is designed to be the bare minimum required to automatically take Btrf
 - btrfs
 - bash
 - [jq](https://stedolan.github.io/jq/)
+- (groff)
 - (make)
 - ([shellcheck](https://github.com/koalaman/shellcheck))
 
